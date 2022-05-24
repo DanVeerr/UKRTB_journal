@@ -1,0 +1,35 @@
+﻿@model UKRTB_journal.Models.Student
+
+@inject UKRTB_journal.Services.IInfoService InfoService
+@{
+    ViewBag.Title = "Удаление пользователя";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Имя</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>Фамилия</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+        <dt>Группа</dt>
+        <dd>
+            @InfoService.GetGroupName(@Model.GroupId)
+        </dd>
+        <dt>Email</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+
+    <div>
+        <form asp-controller="Students" asp-action="Delete" method="post">
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Удалить" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<UKRTB_journal.Models.Student>
+@inject UKRTB_journal.Services.IInfoService InfoService
+@{
+    ViewBag.Title = "Все пользователи";
+}
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <td scope="col" align="center">Имя пользователя:</td>
+            <td scope="col" align="center">Фамилия пользователь:</td>
+            <td scope="col" align="center">Email:</td>
+            <td scope="col" align="center">Действия:</td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td align="center">@item.Surname</td>
+            <td align="center">@item.Name</td>
+            <td align="center">@item.Email</td>
+            <td align="center">
+                <a asp-action="FilesView" asp-controller="Files" asp-route-studentId="@item.Id">Все работы</a> |
+                <a asp-action="Edit" asp-controller="Students" asp-route-studentId="@item.Id">Изменить</a> |
+                <a asp-action="Delete" asp-controller="Students" asp-route-studentId="@item.Id">Удалить</a>
+            </td>
+        </tr>
+    }
+</table>
+<a asp-action="Create">Добавить пользователя</a>

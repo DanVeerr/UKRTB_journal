@@ -1,0 +1,77 @@
+﻿@model UKRTB_journal.ViewModels.FilesViewModel
+@inject UKRTB_journal.Services.IInfoService InfoService
+@{
+    ViewData["Title"] = "Работы";
+}
+
+<form class="form-inline">
+    <label>Выберите студента</label>
+    <select name="studentId" class="form-select">
+        @foreach (UKRTB_journal.ViewModels.StudentModel student in Model.Students)
+        {
+            if (Model.StudentId != null && Model.StudentId == student.Id)
+            {
+                <option selected="selected" value="@student.Id">@student.Surname @student.Name</option>
+            }
+            else
+            {
+                <option value="@student.Id">@student.Surname @student.Name</option>
+            }
+        }
+    </select>
+    <input type="submit" class="btn btn-primary" value="Выбрать" />
+</form>
+<form class="form-inline">
+    <label>Выберите группу</label>
+    <select name="groupId" class="form-select">
+        @foreach (UKRTB_journal.ViewModels.GroupModel group in Model.Groups)
+        {
+            if (Model.GroupId != null && Model.GroupId == group.Id)
+            {
+                <option selected="selected" value="@group.Id">@group.Name</option>
+            }
+            else
+            {
+                <option value="@group.Id">@group.Name</option>
+            }
+        }
+    </select>
+    <input type="submit" class="btn btn-primary" value="Выбрать" />
+</form>
+<br />
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+
+            <td scope="col" align="center">№</td>
+            <td scope="col" align="center">Фамилия студента:</td>
+            <td scope="col" align="center">Имя студента:</td>
+            <td scope="col" align="center">Группа:</td>
+            <td scope="col" align="center">Тип работы:</td>
+            <td scope="col" align="center">Номер работы:</td>
+            <td scope="col" align="center">Дата загрузки:</td>
+            <td scope="col" align="center">Дата изменения:</td>
+            <td scope="col" align="center">Описание файла:</td>
+            <td scope="col" align="center">Действия:</td>
+        </tr>
+    </thead>
+        @foreach (UKRTB_journal.Models.FileDescription file in Model.Files)
+        {
+            <tr>
+                  <td scope="row" align="center">@file.Id</td>
+                  <td align="center">@InfoService.GetStudentSurName(@file.StudentId)</td>
+                  <td align="center">@InfoService.GetStudentName(@file.StudentId)</td>
+                  <td align="center">@InfoService.GetGroupName(@file.GroupId)</td>
+                  <td align="center">@InfoService.GetTypeOfFileName((int)@file.FileNumberForType)</td>
+                  <td align="center">@file.FileNumberForType</td>
+                  <td align="center">@file.UploadDate.ToLongDateString()</td>
+                  <td align="center">@file.EditDate.ToLongDateString()</td>
+                  <td align="center">@file.Description</td>
+                  <td align="center">
+                      <a asp-action="Edit" asp-controller="Files" asp-route-fileId="@file.Id">Изменить</a> |
+                      <a asp-action="Delete" asp-controller="Files" asp-route-fileId="@file.Id">Удалить</a>
+                  </td>
+            </tr> 
+        }
+</table>
+<a asp-action="UploadFileView" asp-controller="Files" asp-route-id="@Model.StudentId">Добавить работу</a>

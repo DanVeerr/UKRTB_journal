@@ -1,0 +1,30 @@
+﻿@model UKRTB_journal.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Ошибка!</h1>
+<h2 class="text-danger">Что-то пошло не так.</h2>
+
+@switch (Model.Code)
+{
+    case 404:
+        <h3>Неверная ссылка, проверьте правильность введенной ссылки.</h3>
+        <h3><a class="text-primary" asp-controller="Files" asp-action="FilesView">Вернуться на главную</a></h3>
+        break;
+    case null:
+        <h3>На сервере что-то пошло не так</h3>
+        <h3><a class="text-primary" asp-controller="Files" asp-action="FilesView">Вернуться на главную</a></h3>
+        break;
+    case 999:
+        <h3>Пользователя с таким Id не существует</h3>
+        <h3><a class="text-primary" asp-controller="Files" asp-action="FilesView">Вернуться на главную</a></h3>
+        break;
+    default:
+        <h3>Приносим извениние за неудобство</h3>
+        <h3><a class="text-primary" asp-controller="Files" asp-action="FilesView">Вернуться на главную</a></h3>
+        break;
+}
+
+
+
