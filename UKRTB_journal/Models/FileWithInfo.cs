@@ -7,8 +7,12 @@ namespace UKRTB_journal.Models
         public IFormFile File { get; set; }
 
         public FileDescription FileDescription { get; set; }
-        
-        public string Message { get; set; }
+    }
+    public class MetodFileWithInfo
+    {
+        public IFormFile File { get; set; }
+
+        public MetodFileDescription MetodFileDescription { get; set; }
     }
 
     public class FileDescription
@@ -30,6 +34,25 @@ namespace UKRTB_journal.Models
         public int StudentId { get; set; }
 
         public int GroupId { get; set; }
+
+        public int Version { get; set; }
+    }
+
+    public class MetodFileDescription
+    {
+        public string PublicName { get; set; }
+
+        public int Id { get; set; }
+
+        public string Path { get; set; }
+
+        public string? Description { get; set; }
+
+        public DateTime UploadDate { get; set; }
+
+        public DateTime EditDate { get; set; }
+
+        public TypeOfFile Type { get; set; }
 
         public int Version { get; set; }
     }
