@@ -6,22 +6,27 @@
 
 <div>
     <dl class="dl-horizontal">
-        <dt>Количество часов:</dt>
+        <dt>Тип файла:</dt>
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt>Номер работы:</dt>
         <dd>
             @Html.DisplayFor(model => model.FileNumberForType)
         </dd>
-        <dt>Количество часов:</dt>
-        <dd>
-            @Html.DisplayFor(model => model.FileNumberForType)
-        </dd>
-        <dt>Дата:</dt>
+        <dt>Дата загрузки:</dt>
         <dd>
             @Model.UploadDate.ToLongDateString()
         </dd>
-        <dt>Дата:</dt>
-        <dd>
-            @Model.EditDate.ToLongDateString()
-        </dd>
+        <dt>Дата изменения:</dt>
+        @if (Model.EditDate.HasValue)
+            {
+               <dd >@Model.EditDate.Value.ToLongDateString()</dd>
+            }
+            else
+            {
+               <dd >Не изменялся</dd>
+            }
         <dt>Примечание:</dt>
         <dd>
             @Html.DisplayFor(model => model.Description)
@@ -30,7 +35,7 @@
     </dl>
 
     <div>
-        <form asp-controller="Files" asp-action="Delete" method="post">
+        <form asp-controller="Files" asp-action="Delete" asp-route-fileId="@Model.Id" method="post">
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Удалить" />
             </div>

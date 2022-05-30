@@ -9,7 +9,7 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt>Группы</dt>
+        <dt>Группа</dt>
         <dd>
             @Html.DisplayFor(model => model.Speciality)
         </dd>
@@ -20,7 +20,7 @@
     </dl>
 
     <div>
-        <form asp-controller="Groups" asp-action="Delete" method="post">
+        <form asp-controller="Groups" asp-action="Delete" method="post" asp-route-groupId="@Model.Id">
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Удалить" />
             </div>

@@ -37,13 +37,12 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/upload")]
-        public IActionResult UploadFileView()
+        public IActionResult UploadFileView(int? groupId)
         {
-            var students = _context.Students.ToList();
-            var groups = _context.Groups.ToList();
+            var students = _context.Students.Where(x => groupId == null || x.Id == groupId).ToList();
+            ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
 
             ViewBag.Students = new SelectList(students, "Id", "Surname");
-            ViewBag.Groups = new SelectList(groups, "Id", "Name");
 
             return View("/Views/Files/Create.cshtml");
         }
@@ -54,7 +53,21 @@ namespace UKRTB_journal.Controllers
             var files = _context.Files
                 .Where(x => studentId == null || x.StudentId == studentId)
                 .Where(x => groupId == null || x.GroupId == groupId).ToList();
-            var students = _context.Students.Select(x => new StudentModel { Id = x.Id, Surname = x.Surname, Name = x.Name }).ToList();
+            var student = _context.Students.FirstOrDefault(x => x.Id == studentId);
+            var students = new List<StudentModel>();
+            if (student is null)
+            {
+                students = _context.Students
+                    .Where(x => groupId == null || x.GroupId == groupId)
+                 .Select(x => new StudentModel { Id = x.Id, Surname = x.Surname, Name = x.Name, GroupId = x.GroupId }).ToList();
+            }
+            else
+            {
+                students = _context.Students
+                    .Where(x => x.GroupId == groupId || (student != null & x.GroupId == student.GroupId))
+                    .Select(x => new StudentModel { Id = x.Id, Surname = x.Surname, Name = x.Name, GroupId = x.GroupId }).ToList();
+            }
+            
             var groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
 
             return View("/Views/Files/Files.cshtml", new FilesViewModel { GroupId = groupId, StudentId = studentId, Files = files, Students = students, Groups = groups });
@@ -64,8 +77,17 @@ namespace UKRTB_journal.Controllers
         public async Task<IActionResult> EditFilesView(int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
-
+            ViewBag.Students = _context.Students.Select(x => new StudentModel { Id = x.Id, Surname = x.Surname, Name = x.Name, GroupId = x.GroupId }).ToList();
+            ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
             return View("/Views/Files/Edit.cshtml", new FileWithInfo { FileDescription = file });
+        }
+
+        [HttpGet("files/mark")]
+        public async Task<IActionResult> MarkFilesView(int fileId)
+        {
+            var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
+
+            return View("/Views/Files/Mark.cshtml", new FileWithInfo { FileDescription = file });
         }
 
         [HttpGet("files/delete")]
@@ -89,77 +111,64 @@ namespace UKRTB_journal.Controllers
                     );
                 if (sameFile != null)
                 {
-                    fileDto.FileDescription.Version = sameFile.Version;
+                    fileDto.FileDescription.Version = sameFile.Version + 1;
                 }
                 else
                 {
                     fileDto.FileDescription.Version = 1;
                 }
+                
+                fileDto.FileDescription.GroupId = _context.Students.FirstOrDefault(x => x.Id == fileDto.FileDescription.StudentId)?.GroupId ?? 1;
 
-                var fileInDb = _context.Files.Add(fileDto.FileDescription);
-                var path = "/files/" +
-                    $"{fileInDb.Entity.Id}-" +
-                    $"{fileDto.FileDescription.Version}-" +
-                    fileDto.File.FileName.Substring(fileDto.File.FileName.LastIndexOf('.'));
+                var path = GetPath(fileDto);
+                fileDto.FileDescription.Path = path;
+                fileDto.FileDescription.UploadDate = DateTime.Now;
+
+                _context.Files.Add(fileDto.FileDescription);
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
                     await fileDto.File.CopyToAsync(fileStream);
                 }
 
-                fileInDb.Entity.Path = path;
-                fileInDb.Entity.UploadDate = DateTime.Now;
-
                 await _context.SaveChangesAsync();
-                fileDto.FileDescription.Path = path;
-                fileDto.FileDescription.UploadDate = DateTime.Now;
+                
                 Send(fileDto);
             }
 
             return RedirectToAction("FilesView");
         }
 
-        [HttpPost("files/edit")]
+        [HttpPost("files/edit/{filedescription.id}")]
         public async Task<IActionResult> EditFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
             {
-                if (fileDto.File != null)
-                {
-                    var path = "/files/" +
-                        $"{fileDto.FileDescription.Id}" +
-                        $"{fileDto.FileDescription.Version}" +
-                        fileDto.File.Name.Trim().ToLower()[..fileDto.File.FileName.IndexOf('.')];
+                FileDescription file = await _context.Files.FirstOrDefaultAsync(p => p.Id == fileDto.FileDescription.Id);
+                file.Version++;
 
-                    var fileInfo = new FileInfo(path);
-                    if (fileInfo.Exists)
-                    {
-                        fileInfo.Delete();
-                    }
+                file.StudentId = fileDto.FileDescription.StudentId;
+                file.GroupId = fileDto.FileDescription.GroupId;
+                file.FileNumberForType = fileDto.FileDescription.FileNumberForType;
+                file.Type = fileDto.FileDescription.Type;
+                file.EditDate = DateTime.Now;
 
-                    fileDto.FileDescription.Version++;
+                _context.Files.Update(file);
+                _context.SaveChanges();
+            }
 
-                    path = "/files/" +
-                        $"{fileDto.FileDescription.Id}" +
-                        $"{fileDto.FileDescription.Version}" +
-                        fileDto.File.Name.Trim().ToLower()[..fileDto.File.FileName.IndexOf('.')];
+            return RedirectToAction("FilesView");
+        }
 
-                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                    {
-                        await fileDto.File.CopyToAsync(fileStream);
-                    }
+        [HttpPost("files/mark/{filedescription.id}")]
+        public async Task<IActionResult> MarkFile(FileWithInfo fileDto)
+        {
+            if (fileDto != null)
+            {
+                FileDescription file = await _context.Files.FirstOrDefaultAsync(p => p.Id == fileDto.FileDescription.Id);
+                file.Mark = fileDto.FileDescription.Mark;
 
-                    fileDto.FileDescription.Path = path;
-                }
-                else
-                {
-                    fileDto.FileDescription.Version++;
-                }
-
-
-                fileDto.FileDescription.EditDate = DateTime.Now;
-
-                _context.Files.Update(fileDto.FileDescription);
+                _context.Files.Update(file);
                 _context.SaveChanges();
             }
 
@@ -177,7 +186,7 @@ namespace UKRTB_journal.Controllers
                     _context.Files.Remove(file);
                     await _context.SaveChangesAsync();
 
-                    var fileInfo = new FileInfo(file.Path);
+                    var fileInfo = new FileInfo(_appEnvironment.WebRootPath + file.Path);
                     if (fileInfo != null)
                     {
                         fileInfo.Delete();
@@ -241,7 +250,18 @@ namespace UKRTB_journal.Controllers
             }
         }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public string GetPath(FileWithInfo fileDto)
+        {
+            return "/files/" +
+                    $"{infoService.GetGroupName(fileDto.FileDescription.GroupId)}-" +
+                    $"{infoService.GetStudentSurName(fileDto.FileDescription.StudentId)}-" +
+                    $"{fileDto.FileDescription.Type}-" +
+                    $"{fileDto.FileDescription.FileNumberForType}-" +
+                    $"{fileDto.FileDescription.Version}-" +
+                    fileDto.File.FileName.Substring(fileDto.File.FileName.LastIndexOf('.'));
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? code)
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, Code = code });

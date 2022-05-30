@@ -58,7 +58,7 @@ namespace UKRTB_journal.Controllers
             return RedirectToAction("GroupsView");
         }
 
-        [HttpPost("edit")]
+        [HttpPost("edit/{id}")]
         public async Task<IActionResult> EditGroup(Group groupDto)
         {
             _context.Groups.Update(groupDto);
@@ -68,7 +68,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("delete")]
-        public async Task<IActionResult> DeleteGroup(int? groupId)
+        public async Task<IActionResult> Delete(int? groupId)
         {
             if (groupId != null)
             {

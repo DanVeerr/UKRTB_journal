@@ -1,0 +1,20 @@
+﻿@model UKRTB_journal.Models.FileWithInfo
+@{
+    ViewBag.Title = "Оценивание работы";
+}
+<form asp-action="Mark" asp-controller="Files" asp-route-id="@Model.FileDescription.Id">
+    <p>@Model.FileDescription.Id</p>
+    <div class="form-group">
+        <label asp-for="FileDescription.Mark" class="control-label">Оценка</label>
+        <input type="number" asp-for="FileDescription.Mark" value="@Model.FileDescription.Mark" class="form-control" /><br />
+        <span asp-validation-for="FileDescription.Mark"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Изменить" />
+    </div>
+</form>
+@section scripts
+{
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

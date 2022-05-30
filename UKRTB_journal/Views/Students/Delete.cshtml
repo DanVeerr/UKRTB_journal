@@ -26,7 +26,7 @@
     </dl>
 
     <div>
-        <form asp-controller="Students" asp-action="Delete" method="post">
+        <form asp-controller="Students" asp-action="Delete" asp-route-studentId="@Model.Id" method="post">
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Удалить" />
             </div>

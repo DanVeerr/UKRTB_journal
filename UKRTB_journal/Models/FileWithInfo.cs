@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace UKRTB_journal.Models
 {
@@ -25,7 +26,7 @@ namespace UKRTB_journal.Models
 
         public DateTime UploadDate { get; set; }
 
-        public DateTime EditDate { get; set; }
+        public DateTime? EditDate { get; set; }
 
         public TypeOfFile Type { get; set; }
 
@@ -36,6 +37,9 @@ namespace UKRTB_journal.Models
         public int GroupId { get; set; }
 
         public int Version { get; set; }
+
+        [Range(2, 5, ErrorMessage = "Оценка должна быть равна от 2 до 5")]
+        public int? Mark { get; set; }
     }
 
     public class MetodFileDescription
@@ -44,31 +48,25 @@ namespace UKRTB_journal.Models
 
         public int Id { get; set; }
 
-        public string Path { get; set; }
+        public string FullPath { get; set; }
 
         public string? Description { get; set; }
 
-        public DateTime UploadDate { get; set; }
-
-        public DateTime EditDate { get; set; }
-
         public TypeOfFile Type { get; set; }
-
-        public int Version { get; set; }
     }
 
     public enum TypeOfFile
     {
-        [Description("Лабараторная работа")]
+        [Display(Name = "Лабараторная работа")]
         LabaratoryWork = 1,
 
-        [Description("Практическая работа")]
+        [Display(Name = "Практическая работа")]
         PracticalWork,
 
-        [Description("Конспект")]
+        [Display(Name = "Конспект")]
         Note,
 
-        [Description("Другое")]
+        [Display(Name = "Другое")]
         Other
     }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using UKRTB_journal.Models;
+using UKRTB_journal.ViewModels;
 
 namespace UKRTB_journal.Controllers
 {
@@ -50,6 +51,8 @@ namespace UKRTB_journal.Controllers
         {
             var student = await _context.Students.FirstOrDefaultAsync(x => x.Id == studentId);
 
+            ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
+
             return View("/Views/Students/Edit.cshtml", student);
         }
 
@@ -73,7 +76,7 @@ namespace UKRTB_journal.Controllers
             return RedirectToAction("StudentsView");
         }
 
-        [HttpPost("edit")]
+        [HttpPost("edit/{id}")]
         public async Task<IActionResult> EditStudent(Student studentDto)
         {
             _context.Students.Update(studentDto);

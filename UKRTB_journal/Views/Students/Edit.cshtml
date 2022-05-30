@@ -1,25 +1,36 @@
 ﻿@model UKRTB_journal.Models.Student
+@inject UKRTB_journal.Services.IInfoService InfoService
 @{
     ViewBag.Title = "Редактирование пользователя";
 }
-<form asp-action="Edit" asp-controller="Student" asp-route-id="@Model.Id" method="post">
+<form asp-action="Edit" asp-controller="Students" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
         <label asp-for="Surname" class="control-label">Фамилия</label>
-        <input type="text" value="@ViewBag.Surname" asp-for="Surname" class="form-control" /><br />
+        <input type="text" value="@Model.Surname" asp-for="Surname" class="form-control" /><br />
         <span asp-validation-for="Surname"></span>
     </div>
     <div class="form-group">
         <label asp-for="Name" class="control-label">Имя</label>
-        <input type="text" value="@ViewBag.Name" asp-for="Name" class="form-control" /><br />
+        <input type="text" value="@Model.Name" asp-for="Name" class="form-control" /><br />
         <span asp-validation-for="Name"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="GroupId" class="control-label">Имя</label>
-        <select asp-for="GroupId" asp-items="@ViewBag.Groups"></select>
-    </div>
+    <label>Выберите группу</label>
+    <select name="groupId" class="form-select">
+        @foreach (UKRTB_journal.ViewModels.GroupModel group in @ViewBag.Groups)
+        {
+            if (Model.GroupId != null && Model.GroupId == group.Id)
+            {
+                <option selected="selected" value="@group.Id">@group.Name</option>
+            }
+            else
+            {
+                <option value="@group.Id">@group.Name</option>
+            }
+        }
+    </select>
     <div class="form-group">
         <label asp-for="Email" class="control-label">Email</label>
-        <input type="text" value="@ViewBag.Email" asp-for="Email" class="form-control" /><br />
+        <input type="text" value="@Model.Email" asp-for="Email" class="form-control" /><br />
     </div>
     <div class="form-group">
         <input type="submit" value="Сохранить" class="btn btn-primary" />

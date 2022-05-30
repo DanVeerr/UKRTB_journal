@@ -5,7 +5,7 @@
 <form asp-action="UploadFile" asp-controller="MetodFiles" method="post" enctype="multipart/form-data" asp-antiforgery="true">
     <div class="form-group">
         <label asp-for="MetodFileDescription.PublicName" class="control-label">Название для списка</label>
-        <textarea name="FileDescription.PublicName" class="form-control" ></textarea>></><br />
+        <input type="text" name="MetodFileDescription.PublicName" class="form-control" /></><br />
         <span asp-validation-for="MetodFileDescription.PublicName"></span>
     </div>
     <div class="form-group">
@@ -15,7 +15,7 @@
     </div>
    <div class="form-group">
         <label asp-for="MetodFileDescription.Description" class="control-label">Описание</label>
-        <textarea name="FileDescription.Description" class="form-control" ></textarea>></><br />
+        <textarea name="MetodFileDescription.Description" class="form-control" ></textarea></><br />
         <span asp-validation-for="MetodFileDescription.Description"></span>
     </div>
     <div class="form-group">
