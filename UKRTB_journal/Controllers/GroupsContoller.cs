@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using UKRTB_journal.Models;
 
 namespace UKRTB_journal.Controllers
@@ -28,12 +27,14 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("create")]
+        [Authorize]
         public async Task<IActionResult> AddGroupView()
         {
             return View("/Views/Groups/Create.cshtml");
         }
 
         [HttpGet("edit")]
+        [Authorize]
         public async Task<IActionResult> EditGroupView(int groupId)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == groupId);
@@ -42,6 +43,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteGroupView(int? groupId)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == groupId);
@@ -50,6 +52,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> AddGroup(Group groupDto)
         {
             _context.Groups.Add(groupDto);
@@ -59,6 +62,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("edit/{id}")]
+        [Authorize]
         public async Task<IActionResult> EditGroup(Group groupDto)
         {
             _context.Groups.Update(groupDto);
@@ -68,6 +72,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("delete")]
+        [Authorize]
         public async Task<IActionResult> Delete(int? groupId)
         {
             if (groupId != null)

@@ -9,6 +9,7 @@ namespace UKRTB_journal.Models
 
         public FileDescription FileDescription { get; set; }
     }
+
     public class MetodFileWithInfo
     {
         public IFormFile File { get; set; }
@@ -92,5 +93,18 @@ namespace UKRTB_journal.Models
         public string Year { get; set; }
 
         public string Speciality { get; set; }
+    }
+
+    public class User
+    {
+        public int Id { get; set; }
+
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public int? StudentId { get; set; }
+
+        public int? UserId { get; set; }
     }
 }

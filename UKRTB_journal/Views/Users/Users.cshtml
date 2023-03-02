@@ -1,0 +1,23 @@
+﻿@model IEnumerable<UKRTB_journal.Models.User>
+@{
+    ViewBag.Title = "Все пользователи";
+}
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <td scope="col" align="center">Email пользователя:</td>
+            <td scope="col" align="center">Действия:</td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td align="center">@item.Email</td>
+            <td align="center">
+                <a asp-action="Edit" asp-controller="Users" asp-route-groupId="@item.Id">Изменить</a>
+            </td>
+        </tr>
+    }
+</table>
+<a asp-action="Create">Добавить пользователя</a>

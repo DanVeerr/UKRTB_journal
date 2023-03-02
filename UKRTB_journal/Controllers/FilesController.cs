@@ -9,6 +9,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using System.Net;
 using Distinct.Telemedicine.Contracts.Models;
+using Microsoft.AspNetCore.Authorization;
 using UKRTB_journal.Services;
 
 namespace UKRTB_journal.Controllers
@@ -36,7 +37,9 @@ namespace UKRTB_journal.Controllers
             return View();
         }
 
+
         [HttpGet("files/upload")]
+        [Authorize]
         public IActionResult UploadFileView(int? groupId)
         {
             var students = _context.Students.Where(x => groupId == null || x.Id == groupId).ToList();
@@ -74,6 +77,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/edit")]
+        [Authorize]
         public async Task<IActionResult> EditFilesView(int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -83,6 +87,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/mark")]
+        [Authorize]
         public async Task<IActionResult> MarkFilesView(int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -91,6 +96,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteFileView(int? fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -99,12 +105,12 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/upload")]
+        [Authorize]
         public async Task<IActionResult> UploadFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
             {
-                var sameFile = await _context.Files
-                    .FirstOrDefaultAsync(x =>
+                var sameFile = await _context.Files.FirstOrDefaultAsync(x =>
                         x.FileNumberForType == fileDto.FileDescription.FileNumberForType &&
                         x.Type == fileDto.FileDescription.Type &&
                         x.StudentId == fileDto.FileDescription.StudentId
@@ -140,6 +146,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/edit/{filedescription.id}")]
+        [Authorize]
         public async Task<IActionResult> EditFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -161,6 +168,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/mark/{filedescription.id}")]
+        [Authorize]
         public async Task<IActionResult> MarkFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -176,6 +184,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteFile(int? fileId)
         {
             if (fileId != null)

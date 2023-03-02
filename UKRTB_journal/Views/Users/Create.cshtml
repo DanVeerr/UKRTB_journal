@@ -1,0 +1,26 @@
+﻿@model UKRTB_journal.Models.LoginDto
+@{
+    ViewBag.Title = "Регистрация";
+}
+<form asp-action="Create" asp-controller="Users">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <label asp-for="Login" class="control-label">Email</label>
+        <input type="text" asp-for="Login" class="form-control" name="login" /><br />
+        <span asp-validation-for="Login"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label">Пароль</label>
+        <input type="text" asp-for="Password" class="form-control" type="password" name="password" /><br />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Добавить" />
+    </div>
+</form>
+
+@section scripts
+{
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
