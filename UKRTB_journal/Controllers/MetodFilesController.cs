@@ -42,10 +42,11 @@ namespace UKRTB_journal.Controllers
         [HttpGet("metodfiles/delete")]
         [Authorize]
         public async Task<IActionResult> DeleteMetodFileView(int? fileId)
+        public async Task<IActionResult> DeleteMetodFileView()
         {
-            var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
+            var files = await _context.MetodFiles.ToListAsync();
 
-            return View("/Views/MetodFiles/Delete.cshtml", file);
+            return View("/Views/MetodFiles/Delete.cshtml", files);
         }
 
         [HttpPost("metodfiles/uploadfile")]
@@ -56,12 +57,13 @@ namespace UKRTB_journal.Controllers
             {
                 var sameFile = await _context.MetodFiles
                     .FirstOrDefaultAsync(x =>
-                        x.Type == fileDto.MetodFileDescription.Type
+                        x.Type == fileDto.MetodFileDescription.Type &&
+                        x.PublicName == fileDto.MetodFileDescription.PublicName
                     );
 
                 if (sameFile != null)
                 {
-                    var fileInfo = new FileInfo(sameFile.FullPath);
+                    var fileInfo = new FileInfo($"{_appEnvironment.WebRootPath}" + sameFile.FullPath);
                     if (fileInfo != null)
                     {
                         fileInfo.Delete();
@@ -84,24 +86,23 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("metodfiles/delete")]
-        [Authorize]
-        public async Task<IActionResult> DeleteMetodFile(int? fileId)
+        public async Task<IActionResult> DeleteMetodFile(int id)
         {
-            if (fileId != null)
+            if (id != null)
             {
-                FileDescription file = await _context.Files.FirstOrDefaultAsync(p => p.Id == fileId);
+                MetodFileDescription file = await _context.MetodFiles.FirstOrDefaultAsync(p => p.Id == id);
                 if (file != null)
                 {
-                    _context.Files.Remove(file);
+                    _context.MetodFiles.Remove(file);
                     await _context.SaveChangesAsync();
 
-                    var fileInfo = new FileInfo(file.Path);
+                    var fileInfo = new FileInfo($"{_appEnvironment.WebRootPath}" + file.FullPath);
                     if (fileInfo != null)
                     {
                         fileInfo.Delete();
                     }
 
-                    return RedirectToAction("FilesView");
+                    return RedirectToAction("MetodFilesView");
                 }
             }
 

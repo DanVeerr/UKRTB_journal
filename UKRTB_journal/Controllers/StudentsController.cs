@@ -33,7 +33,9 @@ namespace UKRTB_journal.Controllers
             {
                 students = _context.Students.ToList();
             }
-            
+            ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name}).ToList();
+
+
             return View("/Views/Students/Students.cshtml", students);
         }
 

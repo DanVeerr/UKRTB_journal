@@ -5,7 +5,7 @@
 <form asp-action="Edit" asp-controller="Files" asp-route-id="@Model.FileDescription.Id">
     <div class="form-group">
         <label asp-for="FileDescription.GroupId" class="control-label">Группа</label>
-        <select name="groupId" class="form-select">
+        <select name="FileDescription.groupId" class="form-select">
             @foreach (UKRTB_journal.ViewModels.GroupModel group in ViewBag.Groups)
             {
                 if (Model.FileDescription.GroupId != null && Model.FileDescription.GroupId == group.Id)
@@ -21,7 +21,7 @@
     </div>
     <div class="form-group">
         <label asp-for="FileDescription.StudentId" class="control-label">Студент</label>
-        <select name="studentId" class="form-select">
+        <select name="FileDescription.studentId" class="form-select">
             @foreach (UKRTB_journal.ViewModels.StudentModel student in ViewBag.Students)
             {
                 if (Model.FileDescription.StudentId != null && Model.FileDescription.StudentId == student.Id)
@@ -37,10 +37,10 @@
     </div>
     <div class="form-group">
         <label asp-for="FileDescription.Type" class="control-label">Тип</label><br />
-        <select name="studentId" class="form-select">
+        <select name="FileDescription.Type" class="form-select">
         @foreach (SelectListItem item in Html.GetEnumSelectList<TypeOfFile>())
         {
-            if (Model.FileDescription.FileNumberForType != null && Model.FileDescription.FileNumberForType == int.Parse(item.Value))
+            if (Model.FileDescription.FileNumberForType != null && (int)Model.FileDescription.Type == int.Parse(item.Value))
             {
                 <option selected="selected" value="@item.Value">@item.Text</option>
             }

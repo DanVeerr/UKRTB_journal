@@ -1,14 +1,30 @@
 ﻿@model IEnumerable<UKRTB_journal.Models.Student>
 @inject UKRTB_journal.Services.IInfoService InfoService
 @{
-    ViewBag.Title = "Все пользователи";
+    ViewBag.Title = "Все студенты";
 }
-
+<form class="form-inline">
+    <label>Выберите группу&nbsp;</label>
+    <select name="groupId" class="form-select">
+        @foreach (UKRTB_journal.ViewModels.GroupModel group in ViewBag.Groups)
+        {
+            if (ViewBag.GroupId != null && ViewBag.GroupId == group.Id)
+            {
+                <option selected="selected" value="@group.Id">@group.Name</option>
+            }
+            else
+            {
+                <option value="@group.Id">@group.Name</option>
+            }
+        }
+    </select>
+    &nbsp;<input type="submit" class="btn btn-primary" value="Выбрать" /> 
+</form>
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <td scope="col" align="center">Имя пользователя:</td>
-            <td scope="col" align="center">Фамилия пользователь:</td>
+            <td scope="col" align="center">Имя:</td>
+            <td scope="col" align="center">Фамилия:</td>
             <td scope="col" align="center">Email:</td>
             <td scope="col" align="center">Действия:</td>
         </tr>

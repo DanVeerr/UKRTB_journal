@@ -3,7 +3,6 @@
     ViewBag.Title = "Оценивание работы";
 }
 <form asp-action="Mark" asp-controller="Files" asp-route-id="@Model.FileDescription.Id">
-    <p>@Model.FileDescription.Id</p>
     <div class="form-group">
         <label asp-for="FileDescription.Mark" class="control-label">Оценка</label>
         <input type="number" asp-for="FileDescription.Mark" value="@Model.FileDescription.Mark" class="form-control" /><br />

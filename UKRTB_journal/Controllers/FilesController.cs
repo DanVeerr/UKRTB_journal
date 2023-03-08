@@ -22,7 +22,7 @@ namespace UKRTB_journal.Controllers
         IConfiguration Configuration { get; }
         private EmailSettings _emailSettings;
         IInfoService infoService;
-
+        bool isSaveFiles;
         public FilesController(ApplicationContext context, ILogger<FilesController> logger, IWebHostEnvironment appEnvironment, IConfiguration configuration, IInfoService infoService)
         {
             _context = context;
@@ -30,6 +30,7 @@ namespace UKRTB_journal.Controllers
             _appEnvironment = appEnvironment;
             Configuration = configuration;
             this.infoService = infoService;
+            Configuration.GetValue<string>("isSaveFiles");
         }
 
         public IActionResult Privacy()
@@ -42,7 +43,7 @@ namespace UKRTB_journal.Controllers
         [Authorize]
         public IActionResult UploadFileView(int? groupId)
         {
-            var students = _context.Students.Where(x => groupId == null || x.Id == groupId).ToList();
+            var students = _context.Students.Where(x => groupId == null || x.GroupId == groupId).ToList();
             ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
 
             ViewBag.Students = new SelectList(students, "Id", "Surname");
@@ -131,7 +132,7 @@ namespace UKRTB_journal.Controllers
                 fileDto.FileDescription.UploadDate = DateTime.Now;
 
                 _context.Files.Add(fileDto.FileDescription);
-
+                
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
                     await fileDto.File.CopyToAsync(fileStream);
@@ -140,6 +141,14 @@ namespace UKRTB_journal.Controllers
                 await _context.SaveChangesAsync();
                 
                 Send(fileDto);
+                if (!isSaveFiles)
+                {
+                    var fileInfo = new FileInfo(_appEnvironment.WebRootPath + fileDto.FileDescription.Path);
+                    if (fileInfo != null)
+                    {
+                        fileInfo.Delete();
+                    }
+                }
             }
 
             return RedirectToAction("FilesView");
@@ -227,7 +236,7 @@ namespace UKRTB_journal.Controllers
             var builder = new BodyBuilder();
 
 
-            builder.TextBody = "Файл";
+            builder.TextBody = $"{file.FileDescription.Description}";
 
             // We may also want to attach a calendar event for Monica party...
             builder.Attachments.Add(_appEnvironment.WebRootPath + file.FileDescription.Path);
