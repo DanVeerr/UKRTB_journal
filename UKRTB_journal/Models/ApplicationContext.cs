@@ -9,7 +9,6 @@ namespace UKRTB_journal.Models
         public DbSet<Student> Students { get; set; }
 
         public DbSet<Group> Groups { get; set; }
-        public DbSet<User> Users { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

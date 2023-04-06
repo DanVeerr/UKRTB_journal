@@ -1,9 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using UKRTB_journal.Models;
+using UKRTB_journal.ViewModels;
+using MimeKit;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using System.Net;
+using Distinct.Telemedicine.Contracts.Models;
 using UKRTB_journal.Services;
-using Microsoft.AspNetCore.Authorization;
 
 namespace UKRTB_journal.Controllers
 {
@@ -24,8 +30,12 @@ namespace UKRTB_journal.Controllers
             this.infoService = infoService;
         }
 
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
         [HttpGet("metodfiles/upload")]
-        [Authorize]
         public IActionResult UploadMetodFileView()
         {
             return View("/Views/MetodFiles/Create.cshtml");
@@ -40,7 +50,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("metodfiles/delete")]
-        [Authorize]
         public async Task<IActionResult> DeleteMetodFileView(int? fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -49,7 +58,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("metodfiles/uploadfile")]
-        [Authorize]
         public async Task<IActionResult> UploadMetodFile(MetodFileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -84,7 +92,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("metodfiles/delete")]
-        [Authorize]
         public async Task<IActionResult> DeleteMetodFile(int? fileId)
         {
             if (fileId != null)

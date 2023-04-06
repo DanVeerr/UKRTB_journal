@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using UKRTB_journal.Models;
 using UKRTB_journal.ViewModels;
 
@@ -38,7 +38,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("create")]
-        [Authorize]
         public async Task<IActionResult> AddStudentView()
         {
             var groups = await _context.Groups.ToListAsync();
@@ -48,7 +47,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("edit")]
-        [Authorize]
         public async Task<IActionResult> EditStudentView(int studentId)
         {
             var student = await _context.Students.FirstOrDefaultAsync(x => x.Id == studentId);
@@ -59,7 +57,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("delete")]
-        [Authorize]
         public async Task<IActionResult> DeleteStudentView(int? studentId)
         {
             var student = await _context.Students.FirstOrDefaultAsync(x => x.Id == studentId);
@@ -68,7 +65,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize]
         public async Task<IActionResult> AddStudent(Student studentDto)
         {
             if(studentDto != null)
@@ -81,7 +77,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("edit/{id}")]
-        [Authorize]
         public async Task<IActionResult> EditStudent(Student studentDto)
         {
             _context.Students.Update(studentDto);
@@ -91,7 +86,6 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("delete")]
-        [Authorize]
         public async Task<IActionResult> DeleteStudent(int? studentId)
         {
             if (studentId != null)
