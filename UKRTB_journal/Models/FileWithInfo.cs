@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace UKRTB_journal.Models
 {
@@ -8,12 +7,6 @@ namespace UKRTB_journal.Models
         public IFormFile File { get; set; }
 
         public FileDescription FileDescription { get; set; }
-    }
-    public class MetodFileWithInfo
-    {
-        public IFormFile File { get; set; }
-
-        public MetodFileDescription MetodFileDescription { get; set; }
     }
 
     public class FileDescription
@@ -40,19 +33,6 @@ namespace UKRTB_journal.Models
 
         [Range(2, 5, ErrorMessage = "Оценка должна быть равна от 2 до 5")]
         public int? Mark { get; set; }
-    }
-
-    public class MetodFileDescription
-    {
-        public string PublicName { get; set; }
-
-        public int Id { get; set; }
-
-        public string FullPath { get; set; }
-
-        public string? Description { get; set; }
-
-        public TypeOfFile Type { get; set; }
     }
 
     public enum TypeOfFile

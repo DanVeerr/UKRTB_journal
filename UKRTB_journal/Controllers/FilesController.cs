@@ -8,7 +8,6 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using System.Net;
-using Distinct.Telemedicine.Contracts.Models;
 using UKRTB_journal.Services;
 
 namespace UKRTB_journal.Controllers

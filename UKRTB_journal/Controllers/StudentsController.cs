@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using UKRTB_journal.Models;
 using UKRTB_journal.ViewModels;
 
@@ -10,15 +9,11 @@ namespace UKRTB_journal.Controllers
     [Route("students")]
     public class StudentsController : Controller
     {
-        private readonly ILogger<StudentsController> _logger;
         ApplicationContext _context;
-        IWebHostEnvironment _appEnvironment;
 
-        public StudentsController(ApplicationContext context, ILogger<StudentsController> logger, IWebHostEnvironment appEnvironment)
+        public StudentsController(ApplicationContext context)
         {
             _context = context;
-            _logger = logger;
-            _appEnvironment = appEnvironment;
         }
 
         [HttpGet]

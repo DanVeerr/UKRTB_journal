@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using UKRTB_journal.Models;
 
 namespace UKRTB_journal.Controllers
@@ -9,15 +7,11 @@ namespace UKRTB_journal.Controllers
     [Route("groups")]
     public class GroupsController : Controller
     {
-        private readonly ILogger<FilesController> _logger;
         ApplicationContext _context;
-        IWebHostEnvironment _appEnvironment;
 
-        public GroupsController(ApplicationContext context, ILogger<FilesController> logger, IWebHostEnvironment appEnvironment)
+        public GroupsController(ApplicationContext context)
         {
             _context = context;
-            _logger = logger;
-            _appEnvironment = appEnvironment;
         }
 
         public async Task<IActionResult> GroupsView()

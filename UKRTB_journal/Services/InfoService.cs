@@ -1,5 +1,4 @@
 ﻿using UKRTB_journal.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace UKRTB_journal.Services
 {

@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Distinct.Telemedicine.Contracts.Models
+namespace UKRTB_journal.Models
 {
 	public class EmailSettings
 	{
