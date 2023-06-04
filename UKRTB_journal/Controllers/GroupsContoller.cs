@@ -27,14 +27,14 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("create")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddGroupView()
         {
             return View("/Views/Groups/Create.cshtml");
         }
 
         [HttpGet("edit")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditGroupView(int groupId)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == groupId);
@@ -43,7 +43,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("delete")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteGroupView(int? groupId)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == groupId);
@@ -52,7 +52,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddGroup(Group groupDto)
         {
             _context.Groups.Add(groupDto);
@@ -62,7 +62,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("edit/{id}")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditGroup(Group groupDto)
         {
             _context.Groups.Update(groupDto);
@@ -72,7 +72,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("delete")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? groupId)
         {
             if (groupId != null)

@@ -20,7 +20,7 @@ namespace UKRTB_journal.Controllers
         {
             ViewBag.ErrorMessageType = errorMessageType;
             ViewBag.ErrorMessage = errorMessageType is null || errorMessageType == "0" ? 
-                null : 
+                null :
                 errorMessageType == "1" ? "Пользователь с таким email не найден" : "Неправильный пароль или логин";
 
             return View("/Views/Auth/Login.cshtml");
@@ -60,7 +60,8 @@ namespace UKRTB_journal.Controllers
 
                 var claims = new List<Claim>
                 {
-                    new (ClaimsIdentity.DefaultNameClaimType, loginDto.Login)
+                    new (ClaimsIdentity.DefaultNameClaimType, loginDto.Login),
+                    new (ClaimsIdentity.DefaultRoleClaimType, user.IsAdmin ? "admin" : "student")
                 };
                 // создаем объект ClaimsIdentity
                 ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

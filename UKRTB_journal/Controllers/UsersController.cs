@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UKRTB_journal.Models;
+using UKRTB_journal.ViewModels;
 
 namespace UKRTB_journal.Controllers
 {
@@ -19,6 +21,7 @@ namespace UKRTB_journal.Controllers
             _appEnvironment = appEnvironment;
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UsersView()
         {
             var users = await _context.Users.ToListAsync();
@@ -27,14 +30,18 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("create")]
-        [Authorize]
-        public async Task<IActionResult> AddUserView()
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> AddUserView(int? groupId)
         {
+            var students = _context.Students.Where(x => groupId == null || x.GroupId == groupId).ToList();
+            ViewBag.Groups = _context.Groups.Select(x => new GroupModel { Id = x.Id, Name = x.Name }).ToList();
+
+            ViewBag.Students = new SelectList(students, "Id", "Surname");
             return View("/Views/Users/Create.cshtml");
         }
 
         [HttpGet("edit")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditUserView(int userId)
         {
             var users = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -43,7 +50,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("delete")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUserView(int? userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -52,18 +59,17 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize]
-        public async Task<IActionResult> AddUser(LoginDto userDto)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> AddUser(User userDto)
         {
-            var user = new User { Email = userDto.Login, Password = userDto.Password };
-            _context.Users.Add(user);
+            _context.Users.Add(userDto);
             _context.SaveChanges();
 
             return RedirectToAction("UsersView");
         }
 
         [HttpPost("edit/{id}")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditUser(User userDto)
         {
             _context.Users.Update(userDto);
@@ -73,7 +79,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("delete")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? userId)
         {
             if (userId != null)

@@ -40,7 +40,7 @@ namespace UKRTB_journal.Controllers
 
 
         [HttpGet("files/upload")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public IActionResult UploadFileView(int? groupId)
         {
             var students = _context.Students.Where(x => groupId == null || x.GroupId == groupId).ToList();
@@ -78,7 +78,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/edit")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> EditFilesView(int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -88,7 +88,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/mark")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> MarkFilesView(int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -97,7 +97,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("files/delete")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> DeleteFileView(int? fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -106,7 +106,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/upload")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> UploadFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -155,7 +155,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/edit/{filedescription.id}")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> EditFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -177,7 +177,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/mark/{filedescription.id}")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> MarkFile(FileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -193,7 +193,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("files/delete")]
-        [Authorize]
+        [Authorize(Roles = "admin, student")]
         public async Task<IActionResult> DeleteFile(int? fileId)
         {
             if (fileId != null)
@@ -217,7 +217,7 @@ namespace UKRTB_journal.Controllers
             return NotFound();
         }
 
-        public async void Send(FileWithInfo file)
+        private async void Send(FileWithInfo file)
         {
             _emailSettings = new EmailSettings()
             {

@@ -25,7 +25,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("metodfiles/upload")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public IActionResult UploadMetodFileView()
         {
             return View("/Views/MetodFiles/Create.cshtml");
@@ -40,8 +40,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpGet("metodfiles/delete")]
-        [Authorize]
-        public async Task<IActionResult> DeleteMetodFileView(int? fileId)
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteMetodFileView()
         {
             var files = await _context.MetodFiles.ToListAsync();
@@ -50,7 +49,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("metodfiles/uploadfile")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UploadMetodFile(MetodFileWithInfo fileDto)
         {
             if (fileDto != null)
@@ -86,6 +85,7 @@ namespace UKRTB_journal.Controllers
         }
 
         [HttpPost("metodfiles/delete")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteMetodFile(int id)
         {
             if (id != null)

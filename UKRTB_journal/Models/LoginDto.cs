@@ -18,6 +18,7 @@ namespace UKRTB_journal.Models
         /// Пароль
         /// </summary>
         [Required(ErrorMessage = "Пароль обязателен")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }
